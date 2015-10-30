@@ -19,7 +19,7 @@
 
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{br-lex}[v. 2015/04/22]
+\ProvidesClass{br-lex}[2015/10/30]
 %\DeclareOption*{%
 %\PassOptionsToClass{\CurrentOption}{scrbook}%
 %}

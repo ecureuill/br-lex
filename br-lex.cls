@@ -1,5 +1,5 @@
   %% br-lex.cls
-  %% Copyright (c) Youssef Cherem <ycherem(at)gmail.com>, 2015
+  %% Copyright (c) Youssef Cherem <ycherem(at)gmail.com>, 2016
   %
   % This work may be distributed and/or modified under the
   % conditions of the LaTeX Project Public License, either version 1.3c
@@ -19,43 +19,36 @@
 
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{br-lex}[2015/10/30]
-%\DeclareOption*{%
-%\PassOptionsToClass{\CurrentOption}{scrbook}%
-%}
-%\PassOptionsToClass{chapterprefix=true,pagesize}{scrbook}
-\LoadClassWithOptions{scrbook}%%[a4paper,DIV=calc]
-\KOMAoptions{pagesize,numbers=noendperiod,headings=small}
-%chapterprefix=true desnecessário com titlesec
+\ProvidesClass{br-lex}[2016/02/11]
+\LoadClassWithOptions{mwbk}
 \RequirePackage{enumitem}
 \RequirePackage{indentfirst}
 \RequirePackage[sharp]{easylist}
 \RequirePackage[normalem]{ulem}
-\addtokomafont{chapter}{\centering}
-\addtokomafont{pagehead}{\rmfamily\itshape}
-%\addtokomafont{section}{\centering}
 \renewcommand{\thechapter}{%Capítulo 
 	\Roman{chapter}} %%%retirado: CAPÍTULO~ por causa da opção Koma chapterprefix=true
-\renewcommand{\thesection}{%Seção~
-	\Roman{section}}
-%Retirado: capítulo e seção por causa de acentos com pdflatex. substituído por nome em titlesec.
+\renewcommand{\thesection}{Seção \Roman{section}}
 
+\SetSectionFormatting{section}
+{10pt plus4pt}
+{\centering\large\textbf{\ifHeadingNumbered
+		\HeadingNumber\enspace\fi\\[8pt] %retirei o ponto
+		\HeadingText}}
+{6pt plus2pt}
+
+\RequirePackage{hyperref}
 \RequirePackage[all]{nowidow}
 
 \RequirePackage{ifxetex}
-\makeatletter
 \ifxetex
 \RequirePackage{fontspec}
-\defaultfontfeatures{Ligatures=TeX}
 \RequirePackage{polyglossia}
 \setmainlanguage{brazil}
-%\setotherlanguages{english,french,spanish,german,italian}
 \else
 \RequirePackage[utf8]{inputenc}
-\addtokomafont{disposition}{\rmfamily}
 \RequirePackage[brazil]{babel}
 \fi
-\makeatother
+
 
 
 %%risca partes do texto
@@ -63,8 +56,9 @@
 
 \newcommand{\titulo}[1]{
 	\begin{center}
-		\centering \bfseries \sffamily \huge #1
-	\end{center}}
+		\centering \bfseries \huge #1
+	\end{center}
+	\thispagestyle{plain}}
 
 \newcommand{\descricao}[1]{\hfill%
 	\begin{minipage}{0.5\textwidth}
@@ -73,52 +67,21 @@
 	\vspace{\baselineskip}
 	}
 
-%%seções
-
-\RequirePackage{titlesec}
-\titleformat{\section}[display]%
-{\large\bfseries\sffamily\centering}
-{Seção \thesection}
-{%-6pt
-	0pt}
-{}
-
-\titlespacing*{\section}
-{0pt}{18pt}{16pt}
-
-\titlespacing*{\chapter}
-{0pt}{18pt}{16pt}
-
-\titleformat{\chapter}[display]%
-{\Large\bfseries\sffamily\centering}
-{Capítulo \thechapter}
-{%-10pt
-	0pt}
-{}
-
-
-
 
 
 
 % % % Para começar capítulos na mesma página:
 
-\RequirePackage{etoolbox} % para opção de começar capítulos na mesma página
 
-%% opção de começar capítulos na mesma página: capitulo
+% opção de começar capítulos na mesma página: capitulo
 
 \DeclareOption{capitulo}{%
-\makeatletter
-\patchcmd{\chapter}{\cleardoublepage\else\clearpage\fi}{}{}{}
-\patchcmd{\addchap}{\cleardoublepage\else\clearpage\fi}{}{}{}
-\makeatother
+	\SetSectionFormatting[wholewidth]{chapter}
+{24pt plus5pt minus2pt}
+	{\FormatChapterHeading{0pt}%
+		{\centering\large \@chapapp \space}{\Large\centering}}
+{10pt plus3pt}
 }
-
-%%%original:
-%\makeatletter
-%\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
-%\makeatother
-
 
 
 \DeclareOption{paragrafoespaco}{%
@@ -171,9 +134,10 @@
 
 \newenvironment{paragrafos}{\setcounter{paragrafo}{0}
 	\setlength{\parindent}{0pt}
-	\begin{addmargin}[4em]{0pt} 
+	\leftskip=4em
+	%\begin{addmargin}[4em]{0pt} 
 	}
-	{\end{addmargin}
+	{%\end{addmargin}
 		}
 	
 	
